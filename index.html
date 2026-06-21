@@ -49,34 +49,31 @@
     background: var(--sand);
     clip-path: ellipse(60% 100% at 50% 100%);
   }
+  .hero > * { position: relative; z-index: 1; }
   .hero-tag {
     display: inline-block;
     background: var(--gold); color: #fff;
     font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
     padding: 0.35rem 1rem; border-radius: 2px; margin-bottom: 1.5rem;
-    position: relative; z-index: 1;
   }
   .hero h1 {
     font-family: 'Playfair Display', serif;
     font-size: clamp(3rem, 8vw, 6rem);
     font-weight: 900; color: #fff;
     line-height: 1.05; margin-bottom: 0.5rem;
-    position: relative; z-index: 1;
   }
   .hero h1 em { font-style: italic; color: var(--gold); }
   .hero .subtitle {
     font-size: 1.1rem; color: rgba(255,255,255,0.75);
     font-weight: 300; margin-bottom: 2.5rem; letter-spacing: 0.02em;
-    position: relative; z-index: 1;
   }
   .hero-stats {
     display: flex; gap: 3rem; margin-bottom: 3rem; flex-wrap: wrap; justify-content: center;
-    position: relative; z-index: 1;
   }
   .hero-stat { text-align: center; }
   .hero-stat .num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #fff; }
   .hero-stat .lbl { font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.1em; }
-  .hero-buttons { position: relative; z-index: 1; }
+
   .btn-primary {
     background: var(--rust); color: #fff; border: none;
     font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500;
@@ -85,14 +82,15 @@
     transition: background 0.2s, transform 0.1s;
   }
   .btn-primary:hover { background: #a93226; transform: translateY(-1px); }
-  .btn-outline {
-    background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.4);
+
+  .btn-solid {
+    background: var(--ocean-light); color: #fff; border: none;
     font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500;
     padding: 0.85rem 2.5rem; border-radius: 3px; cursor: pointer;
     letter-spacing: 0.04em; text-decoration: none; display: inline-block;
-    transition: border-color 0.2s, color 0.2s; margin-left: 1rem;
+    transition: background 0.2s, transform 0.1s; margin-left: 1rem;
   }
-  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-solid:hover { background: #1a6fa8; transform: translateY(-1px); }
 
   section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
 
@@ -109,22 +107,24 @@
 
   .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
   .about-photo {
-    border-radius: 6px; aspect-ratio: 4/3; overflow: hidden;
+    border-radius: 6px; overflow: hidden; aspect-ratio: 4/3;
+  }
+  .about-photo img {
+    width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 6px;
+  }
+  .about-photo-placeholder {
+    border-radius: 6px; aspect-ratio: 4/3;
     background: linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%);
     display: flex; align-items: center; justify-content: center;
-    color: rgba(255,255,255,0.5); font-size: 0.85rem; letter-spacing: 0.05em;
-    text-transform: uppercase; flex-direction: column; gap: 0.5rem;
-    text-align: center; padding: 2rem;
+    flex-direction: column; gap: 0.75rem;
+    color: rgba(255,255,255,0.6); font-size: 0.85rem; text-align: center; padding: 2rem;
   }
-  .about-photo img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 6px; }
 
-  /* Events / pricing */
+  /* Events */
   .events-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
   .event-card {
-    background: #fff; border-radius: 8px;
-    border: 1.5px solid var(--light-border);
-    padding: 2rem; position: relative;
-    transition: transform 0.2s, box-shadow 0.2s;
+    background: #fff; border-radius: 8px; border: 1.5px solid var(--light-border);
+    padding: 2rem; transition: transform 0.2s, box-shadow 0.2s;
   }
   .event-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,82,118,0.12); }
   .event-card.featured { border-color: var(--ocean); }
@@ -154,34 +154,31 @@
   .event-cta.rust { background: var(--rust); }
   .event-cta.rust:hover { background: #a93226; }
 
-  /* Course section */
+  /* Course */
   .course-bg { background: var(--ocean); margin: 0; max-width: 100%; padding: 5rem 2rem; }
   .course-inner { max-width: 1100px; margin: 0 auto; }
   .course-bg .section-label { color: var(--gold); }
   .course-bg h2 { color: #fff; }
   .course-bg p { color: rgba(255,255,255,0.7); }
   .course-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem; align-items: start; margin-top: 2rem; }
-  .course-points { display: flex; flex-direction: column; gap: 0; }
+  .course-points { display: flex; flex-direction: column; }
   .course-point {
     background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 0; padding: 1rem 1.25rem; border-bottom: none; position: relative;
+    padding: 1rem 1.25rem; border-bottom: none;
   }
   .course-point:first-child { border-radius: 6px 6px 0 0; }
   .course-point:last-child { border-radius: 0 0 6px 6px; border-bottom: 1px solid rgba(255,255,255,0.12); }
   .course-point .row { display: flex; align-items: center; gap: 1rem; }
-  .course-point .km { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--gold); font-weight: 700; min-width: 50px; }
-  .course-point .detail p { font-size: 0.85rem; color: rgba(255,255,255,0.65); margin: 0; }
-  .course-point .detail strong { font-size: 0.95rem; color: #fff; font-weight: 500; }
-  .course-point .badges { display: flex; gap: 0.4rem; margin-top: 0.4rem; flex-wrap: wrap; }
-  .course-badge {
-    font-size: 0.65rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 0.15rem 0.5rem; border-radius: 2px;
-  }
+  .course-point .km { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--gold); font-weight: 700; min-width: 55px; }
+  .course-point .detail strong { font-size: 0.95rem; color: #fff; font-weight: 500; display: block; }
+  .course-point .detail p { font-size: 0.82rem; color: rgba(255,255,255,0.6); margin: 0.2rem 0 0.4rem; }
+  .course-point .badges { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .course-badge { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 2px; }
   .cb-half { background: rgba(212,160,23,0.3); color: var(--gold); }
   .cb-10k { background: rgba(46,134,193,0.3); color: #5dade2; }
   .cb-relay { background: rgba(192,57,43,0.3); color: #ec7063; }
-  #map { height: 400px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.15); }
-  .map-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
+  #map { height: 420px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.15); }
+  .map-legend { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 1rem; }
   .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: rgba(255,255,255,0.7); }
   .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
 
@@ -211,17 +208,9 @@
   .faq-toggle { font-size: 1.4rem; color: var(--ocean-light); transition: transform 0.2s; flex-shrink: 0; margin-left: 1rem; }
   .faq-toggle.open { transform: rotate(45deg); }
 
-  footer {
-    background: var(--dark); color: rgba(255,255,255,0.5);
-    text-align: center; padding: 2.5rem 2rem; font-size: 0.85rem;
-  }
-  footer .footer-logo { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem; }
-  footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
-  footer a:hover { color: var(--gold); }
-
-  /* Contact form */
+  /* Contact */
   .contact-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 4rem; align-items: start; max-width: 860px; margin: 0 auto; }
-  .contact-info h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--ocean); margin-bottom: 0.5rem; }
+  .contact-info h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ocean); margin-bottom: 0.3rem; }
   .contact-info p { font-size: 0.95rem; }
   .contact-info a { color: var(--ocean-light); text-decoration: none; }
   .contact-info a:hover { text-decoration: underline; }
@@ -231,10 +220,8 @@
   .form-row { margin-bottom: 1.1rem; }
   .form-row label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--ocean); margin-bottom: 0.35rem; letter-spacing: 0.03em; text-transform: uppercase; }
   .form-row input, .form-row select, .form-row textarea {
-    width: 100%; padding: 0.7rem 0.9rem;
-    border: 1.5px solid #ddd; border-radius: 4px;
-    font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
-    color: var(--dark); background: #fff; transition: border-color 0.2s;
+    width: 100%; padding: 0.7rem 0.9rem; border: 1.5px solid #ddd; border-radius: 4px;
+    font-size: 0.95rem; font-family: 'DM Sans', sans-serif; color: var(--dark); background: #fff; transition: border-color 0.2s;
   }
   .form-row input:focus, .form-row select:focus, .form-row textarea:focus { outline: none; border-color: var(--ocean-light); }
   .form-row textarea { resize: vertical; min-height: 110px; }
@@ -245,9 +232,17 @@
     color: #1a7a4a; font-size: 0.95rem; margin-top: 1rem;
   }
 
+  footer {
+    background: var(--dark); color: rgba(255,255,255,0.5);
+    text-align: center; padding: 2.5rem 2rem; font-size: 0.85rem;
+  }
+  footer .footer-logo { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem; }
+  footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  footer a:hover { color: var(--gold); }
+
   @media (max-width: 768px) {
     .about-grid, .course-layout, .contact-grid { grid-template-columns: 1fr; }
-    .btn-outline { margin-left: 0; margin-top: 0.75rem; display: block; text-align: center; }
+    .btn-solid { margin-left: 0; margin-top: 0.75rem; display: block; text-align: center; }
     nav ul { display: none; }
     .form-two-col { grid-template-columns: 1fr; }
   }
@@ -271,7 +266,7 @@
 
 <!-- HERO -->
 <div class="hero">
-  <img src="logo-circle.png" alt="Ahuriri Half Marathon" style="width: clamp(140px, 22vw, 200px); margin-bottom: 1.5rem; filter: drop-shadow(0 4px 16px rgba(0,0,0,0.3)); position: relative; z-index: 1;">
+  <img src="logo-circle.png" alt="Ahuriri Half Marathon" style="width: clamp(140px, 22vw, 200px); margin-bottom: 1.5rem; filter: drop-shadow(0 4px 16px rgba(0,0,0,0.3));">
   <div class="hero-tag">Napier, Hawke's Bay · New Zealand</div>
   <h1>Ahuriri<br><em>Half Marathon</em></h1>
   <p class="subtitle">11 October 2026 · Run the Bay</p>
@@ -280,9 +275,9 @@
     <div class="hero-stat"><div class="num">10km</div><div class="lbl">Fun Run</div></div>
     <div class="hero-stat"><div class="num">Relay</div><div class="lbl">4-Person Team</div></div>
   </div>
-  <div class="hero-buttons">
+  <div>
     <a href="#register" class="btn-primary">Register Now</a>
-    <a href="#course" class="btn-outline">View Course</a>
+    <a href="#course" class="btn-solid">View Course</a>
   </div>
 </div>
 
@@ -296,21 +291,25 @@
       <p>Whether you're chasing a personal best, tackling your first 10km, or teaming up with friends for the relay, this event is designed for runners of all abilities.</p>
       <p>All finishers receive a medal, and post-race refreshments will be available at the finish line.</p>
     </div>
-    <img src="napier.jpg" alt="Ahuriri waterfront" class="about-photo">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-    </div>
+    <!--
+      PHOTO INSTRUCTIONS:
+      1. Upload your photo to your GitHub repository (same folder as index.html)
+      2. Name it something simple e.g. napier.jpg
+      3. Delete the <div class="about-photo-placeholder">...</div> block below
+      4. Replace it with: <div class="about-photo"><img src="napier.jpg" alt="Ahuriri waterfront"></div>
+    -->
+    <div class="about-photo"><img src="napier.jpg" alt="Ahuriri waterfront"></div>
   </div>
 </section>
 
 <!-- EVENTS & PRICING -->
-<section id="events" style="background:#fff; max-width:100%; padding: 5rem 2rem;">
+<section id="events" style="background:#fff; max-width:100%; padding:5rem 2rem;">
   <div style="max-width:1100px; margin:0 auto;">
     <div class="section-label" style="text-align:center;">Choose your event</div>
     <h2 style="text-align:center;">Three ways to race</h2>
-    <p style="text-align:center; max-width:600px; margin:0 auto 0;">Whether you're a seasoned runner, a 10km newcomer, or want to share the experience with friends — there's an event for you.</p>
+    <p style="text-align:center; max-width:600px; margin:0 auto 1rem;">Whether you're a seasoned runner, a 10km newcomer, or want to share the experience with friends — there's an event for you.</p>
     <div class="events-grid">
 
-      <!-- Half Marathon -->
       <div class="event-card featured">
         <div class="event-badge badge-half">Half Marathon</div>
         <h3>Half Marathon</h3>
@@ -326,7 +325,6 @@
         <a href="https://www.webscorer.com/register?pid=1&raceid=432522" target="_blank" class="event-cta rust">Register — $40</a>
       </div>
 
-      <!-- 10km -->
       <div class="event-card">
         <div class="event-badge badge-10k">10km Run</div>
         <h3>10km</h3>
@@ -342,7 +340,6 @@
         <a href="https://www.webscorer.com/register?pid=1&raceid=432522" target="_blank" class="event-cta">Register — $25</a>
       </div>
 
-      <!-- Relay -->
       <div class="event-card">
         <div class="event-badge badge-relay">Team Relay</div>
         <h3>4-Person Relay</h3>
@@ -494,47 +491,38 @@
   <div class="section-label">Questions</div>
   <h2 style="text-align:center;">Frequently asked questions</h2>
   <div class="faq-list">
-
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">What events are on offer? <span class="faq-toggle">+</span></div>
       <div class="faq-a">There are three events: the Half Marathon (21.1km, $40), the 10km run ($25), and a 4-person relay team for the half marathon distance at $20 per person ($80 per team). All events start and finish at the Ahuriri Waterfront in Napier.</div>
     </div>
-
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">How does the relay work? <span class="faq-toggle">+</span></div>
       <div class="faq-a">The relay is for teams of 4 people, each running approximately 5km. Change-over zones are located at around the 5km, 10km, and 15km marks of the course. Each team member receives a finisher medal.</div>
     </div>
-
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">When and where does the race start? <span class="faq-toggle">+</span></div>
       <div class="faq-a">The race starts at the Ahuriri Waterfront, Napier, on Sunday 11 October 2026. Exact start times for each event will be confirmed closer to race day — check back for updates.</div>
     </div>
-
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">Is there a minimum age to enter? <span class="faq-toggle">+</span></div>
-      <div class="faq-a">Participants must be at least 16 years of age on race day to enter the half marathon or 10km individually. Relay team members must also be 16 or over.</div>
+      <div class="faq-a">Participants must be at least 16 years of age on race day to enter the half marathon or 10km. Relay team members must also be 16 or over.</div>
     </div>
-
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">Is there a time limit? <span class="faq-toggle">+</span></div>
       <div class="faq-a">A course time limit will be confirmed closer to the event. We want to be as inclusive as possible — more details soon.</div>
     </div>
-
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">Can I transfer or defer my entry? <span class="faq-toggle">+</span></div>
       <div class="faq-a">Transfer and deferral policies will be outlined at the time registrations open.</div>
     </div>
-
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">Is there parking nearby? <span class="faq-toggle">+</span></div>
       <div class="faq-a">Yes, there is parking available in the Ahuriri area. Detailed directions and parking information will be included in your pre-race briefing email.</div>
     </div>
-
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">Can I download the GPX course file? <span class="faq-toggle">+</span></div>
       <div class="faq-a">Yes! You can download the GPX file from the course section above to load onto your GPS watch or device before race day.</div>
     </div>
-
   </div>
 </section>
 
@@ -589,8 +577,8 @@
           </div>
         </div>
         <div class="form-row">
-          <label for="email">Email address</label>
-          <input type="email" id="email" name="email" required placeholder="jane@example.com">
+          <label for="cemail">Email address</label>
+          <input type="email" id="cemail" name="email" required placeholder="jane@example.com">
         </div>
         <div class="form-row">
           <label for="enquiry">Enquiry type</label>
@@ -627,4 +615,64 @@
 </footer>
 
 <script>
-const courseCoords = [[-39.47853,176.89603],[-39.47968,176.8954],[-39.48046,176.89517],[-39.48073,176.89568],[-39.48126,176.89765],[-39.48176,176.89731],[-39.48175,176.89603],[-39.48185,176.89488],[-39.4825,176.89456],[-39.48405,176.89375],[-39.48489,176.89336],[-39.48574,176.89271],[-39.48523,176.89199],[-39.48512,176.89137],[-39.48516,176.89089],[-39.48504,176.89002],[-39.48304,176.8892],[-39.48185,176.88885],[-39.48172,176.88938],[-39.48134,176.89218],[-39.48096,176.89312],[-39.48,176.89362],[-39.47954,176.893],[-39.48021,176.89152],[-39.48055,176.88887],[-39.4799,176.8872],[-39.47921,176.88566],[-39.47817,176.88396],[-39.4778,176.88393],[-39.47598,176.88253],[-39.47564,176.88204],[-39.47424,176.88089],[-39.47216,176.87966],[-39.47094,176.87844],[-39.46999,176.87814],[-39.46812,176.87733],[-39.46551,176.87605],[-39.46373,176.87525],[-39.46605,176.87633],[-39.46889,176.87769],[-39.47043,176.87818],[-39.47099,176.8787],[-39.47292,176.88008],[-39.47442,176.88126],[-39.47573,176.88214],[-39.47656,176.88297],[-39.47786,176.88396],[-39.47827,176.88444],[-39.47936,176.88634],[-39.48008,176.88757],[-39.48052,176.88867],[-39.48019,176.89126],[-39.47939,176.89372],[-39.48094,176.89332],[-39.48142,176.89184],[-39.48172,176.88938],[-39.48183,176.88888],[-39.48249,176.88899],[-39.48464,176.88985],[-39.48516,176.89083],[-39.48516,176.89122],[-39.48521,176.89194],[-39.48565,176.89257],[-39.48561,176.89299],[-39.48489,176.89336],[-39.48405,176.89375],[-39.4825,176.89456],[-39.48185,176.89488],[-39.48175,176.89603],[-39.48132,176.8977],[-39.48096,176.89653],[-39.48055,176.89523],[-39.47951,176.89545],[-39.47883,176.89566],[-39.48053,176.89518],[-39.48077,176.89575],[-39.48129,176.8977],[-39.48183,176.89697],[-39.48173,176.89496],[-39.48233,176.89471],[-39.48395,176.89382],[-39.48478,176.89334],[-39.48554,176.89306],[-39.48575,176.89242],[-39.48521,176.89194],[-39.48516,176.89122],
+const courseCoords = [[-39.47853,176.89603],[-39.47968,176.8954],[-39.48046,176.89517],[-39.48073,176.89568],[-39.48126,176.89765],[-39.48176,176.89731],[-39.48175,176.89603],[-39.48185,176.89488],[-39.4825,176.89456],[-39.48405,176.89375],[-39.48489,176.89336],[-39.48574,176.89271],[-39.48523,176.89199],[-39.48512,176.89137],[-39.48516,176.89089],[-39.48504,176.89002],[-39.48304,176.8892],[-39.48185,176.88885],[-39.48172,176.88938],[-39.48134,176.89218],[-39.48096,176.89312],[-39.48,176.89362],[-39.47954,176.893],[-39.48021,176.89152],[-39.48055,176.88887],[-39.4799,176.8872],[-39.47921,176.88566],[-39.47817,176.88396],[-39.4778,176.88393],[-39.47598,176.88253],[-39.47564,176.88204],[-39.47424,176.88089],[-39.47216,176.87966],[-39.47094,176.87844],[-39.46999,176.87814],[-39.46812,176.87733],[-39.46551,176.87605],[-39.46373,176.87525],[-39.46605,176.87633],[-39.46889,176.87769],[-39.47043,176.87818],[-39.47099,176.8787],[-39.47292,176.88008],[-39.47442,176.88126],[-39.47573,176.88214],[-39.47656,176.88297],[-39.47786,176.88396],[-39.47827,176.88444],[-39.47936,176.88634],[-39.48008,176.88757],[-39.48052,176.88867],[-39.48019,176.89126],[-39.47939,176.89372],[-39.48094,176.89332],[-39.48142,176.89184],[-39.48172,176.88938],[-39.48183,176.88888],[-39.48249,176.88899],[-39.48464,176.88985],[-39.48516,176.89083],[-39.48516,176.89122],[-39.48521,176.89194],[-39.48565,176.89257],[-39.48561,176.89299],[-39.48489,176.89336],[-39.48405,176.89375],[-39.4825,176.89456],[-39.48185,176.89488],[-39.48175,176.89603],[-39.48132,176.8977],[-39.48096,176.89653],[-39.48055,176.89523],[-39.47951,176.89545],[-39.47883,176.89566],[-39.48053,176.89518],[-39.48077,176.89575],[-39.48129,176.8977],[-39.48183,176.89697],[-39.48173,176.89496],[-39.48233,176.89471],[-39.48395,176.89382],[-39.48478,176.89334],[-39.48554,176.89306],[-39.48575,176.89242],[-39.48521,176.89194],[-39.48516,176.89122],[-39.48516,176.89083],[-39.48464,176.88985],[-39.48218,176.88887],[-39.4818,176.88893],[-39.48162,176.8902],[-39.48115,176.89255],[-39.47962,176.89358],[-39.47988,176.8925],[-39.4805,176.89068],[-39.48056,176.88864],[-39.48035,176.88803],[-39.47943,176.88655],[-39.47898,176.88529],[-39.47817,176.88396],[-39.4778,176.88393],[-39.47598,176.88253],[-39.47564,176.88204],[-39.47424,176.88089],[-39.47216,176.87966],[-39.47094,176.87844],[-39.46999,176.87814],[-39.46812,176.87733],[-39.46551,176.87605],[-39.46452,176.87563],[-39.46658,176.87661],[-39.46907,176.87773],[-39.4708,176.87832],[-39.47108,176.87881],[-39.47339,176.88048],[-39.47448,176.88134],[-39.47575,176.88221],[-39.47715,176.88342],[-39.47798,176.88388],[-39.47842,176.88474],[-39.47943,176.88655],[-39.48035,176.88803],[-39.48033,176.89104],[-39.48007,176.89361],[-39.48137,176.89204],[-39.48166,176.88984],[-39.4818,176.88893],[-39.48212,176.88885],[-39.48411,176.88967],[-39.48527,176.89073],[-39.48527,176.89123],[-39.48514,176.89147],[-39.48566,176.89241],[-39.48561,176.89299],[-39.48478,176.89334],[-39.48395,176.89382],[-39.48233,176.89471],[-39.48173,176.89496],[-39.48183,176.89697],[-39.48129,176.8977],[-39.48077,176.89575],[-39.48053,176.89518],[-39.47883,176.89566]];
+
+window.addEventListener('load', function() {
+  const map = L.map('map').setView([-39.474, 176.886], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18
+  }).addTo(map);
+  L.polyline(courseCoords, { color: '#3498db', weight: 3.5, opacity: 0.9 }).addTo(map);
+  const startIcon = L.divIcon({
+    html: '<div style="background:#e74c3c;width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>',
+    className: '', iconAnchor: [7, 7]
+  });
+  const relayIcon = L.divIcon({
+    html: '<div style="background:#f39c12;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>',
+    className: '', iconAnchor: [6, 6]
+  });
+  L.marker([-39.47853, 176.89603], {icon: startIcon}).addTo(map).bindPopup('<strong>Start / Finish</strong><br>Ahuriri Waterfront');
+  L.marker([-39.46551, 176.87605], {icon: relayIcon}).addTo(map).bindPopup('<strong>~5km</strong><br>Relay change-over zone 1<br>10km turnaround');
+  L.marker([-39.46373, 176.87525], {icon: relayIcon}).addTo(map).bindPopup('<strong>~15km (second loop)</strong><br>Relay change-over zone 3');
+});
+
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = contactForm.querySelector('button[type="submit"]');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    try {
+      const res = await fetch(contactForm.action, {
+        method: 'POST',
+        body: new FormData(contactForm),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        contactForm.reset();
+        document.getElementById('formSuccess').style.display = 'block';
+        btn.textContent = 'Sent!';
+      } else {
+        btn.textContent = 'Error — please try again';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Error — please try again';
+      btn.disabled = false;
+    }
+  });
+}
+
+function toggleFaq(el) {
+  const ans = el.nextElementSibling;
+  const tog = el.querySelector('.faq-toggle');
+  const isOpen = ans.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-toggle').forEach(t => t.classList.remove('open'));
+  if (!isOpen) { ans.classList.add('open'); tog.classList.add('open'); }
+}
+</script>
+</body>
+</html>
