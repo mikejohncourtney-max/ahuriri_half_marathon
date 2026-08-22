@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahuriri Half Marathon 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ocean: #1a5276;
+    --ocean-light: #2e86c1;
+    --sand: #f5f0e8;
+    --rust: #c0392b;
+    --gold: #d4a017;
+    --dark: #1a1a1a;
+    --mid: #555;
+    --light-border: rgba(26,82,118,0.15);
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(--dark); }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(26,82,118,0.97);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 60px;
+  }
+  nav .logo { display: flex; align-items: center; gap: 0.6rem; font-family: 'Playfair Display', serif; color: #fff; font-size: 1.1rem; letter-spacing: 0.03em; text-decoration: none; }
+  nav .logo img { height: 40px; width: 40px; object-fit: contain; }
+  nav .logo span { color: var(--gold); }
+  nav ul { list-style: none; display: flex; gap: 2rem; }
+  nav ul a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; }
+  nav ul a:hover { color: var(--gold); }
+
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0d3b5e 0%, #1a5276 45%, #2e86c1 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 6rem 2rem 8rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 160px;
+    background: var(--sand);
+    clip-path: ellipse(60% 100% at 50% 100%);
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero-tag {
+    display: inline-block;
+    background: var(--gold); color: #fff;
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.35rem 1rem; border-radius: 2px; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900; color: #fff;
+    line-height: 1.05; margin-bottom: 0.5rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold); }
+  .hero .subtitle {
+    font-size: 1.1rem; color: rgba(255,255,255,0.75);
+    font-weight: 300; margin-bottom: 2.5rem; letter-spacing: 0.02em;
+  }
+  .hero-stats {
+    display: flex; gap: 3rem; margin-bottom: 3rem; flex-wrap: wrap; justify-content: center;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #fff; }
+  .hero-stat .lbl { font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.1em; }
+
+  .btn-primary {
+    background: var(--rust); color: #fff; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500;
+    padding: 0.85rem 2.5rem; border-radius: 3px; cursor: pointer;
+    letter-spacing: 0.04em; text-decoration: none; display: inline-block;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-primary:hover { background: #a93226; transform: translateY(-1px); }
+
+  .btn-solid {
+    background: var(--ocean-light); color: #fff; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500;
+    padding: 0.85rem 2.5rem; border-radius: 3px; cursor: pointer;
+    letter-spacing: 0.04em; text-decoration: none; display: inline-block;
+    transition: background 0.2s, transform 0.1s; margin-left: 1rem;
+  }
+  .btn-solid:hover { background: #1a6fa8; transform: translateY(-1px); }
+
+  section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--ocean-light); margin-bottom: 0.75rem;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700;
+    color: var(--ocean); margin-bottom: 1.5rem; line-height: 1.2;
+  }
+  p { color: var(--mid); line-height: 1.75; margin-bottom: 1rem; }
+
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .about-photo {
+    border-radius: 6px; overflow: hidden; aspect-ratio: 4/3;
+  }
+  .about-photo img {
+    width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 6px;
+  }
+  .about-photo-placeholder {
+    border-radius: 6px; aspect-ratio: 4/3;
+    background: linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 0.75rem;
+    color: rgba(255,255,255,0.6); font-size: 0.85rem; text-align: center; padding: 2rem;
+  }
+
+  /* Events */
+  .events-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+  .event-card {
+    background: #fff; border-radius: 8px; border: 1.5px solid var(--light-border);
+    padding: 2rem; transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .event-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,82,118,0.12); }
+  .event-card.featured { border-color: var(--ocean); }
+  .event-badge {
+    display: inline-block; font-size: 0.7rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.25rem 0.75rem; border-radius: 2px; margin-bottom: 1rem;
+  }
+  .badge-half { background: #d4a01720; color: var(--gold); }
+  .badge-10k { background: #2e86c120; color: var(--ocean-light); }
+  .badge-relay { background: #c0392b20; color: var(--rust); }
+  .event-card h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--ocean); margin-bottom: 0.25rem; }
+  .event-distance { font-size: 0.9rem; color: var(--mid); margin-bottom: 1.25rem; }
+  .event-price { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--ocean); margin-bottom: 0.25rem; }
+  .event-price-note { font-size: 0.8rem; color: var(--mid); margin-bottom: 1.25rem; }
+  .event-features { list-style: none; margin-bottom: 1.5rem; }
+  .event-features li { font-size: 0.9rem; color: var(--mid); padding: 0.3rem 0; padding-left: 1.25rem; position: relative; }
+  .event-features li::before { content: '✓'; position: absolute; left: 0; color: var(--ocean-light); font-weight: 700; }
+  .event-cta {
+    display: block; text-align: center; width: 100%;
+    background: var(--ocean); color: #fff; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+    padding: 0.75rem; border-radius: 4px; cursor: pointer; text-decoration: none;
+    letter-spacing: 0.04em; transition: background 0.2s;
+  }
+  .event-cta:hover { background: var(--ocean-light); }
+  .event-cta.rust { background: var(--rust); }
+  .event-cta.rust:hover { background: #a93226; }
+
+  /* Course */
+  .course-bg { background: var(--ocean); margin: 0; max-width: 100%; padding: 5rem 2rem; }
+  .course-inner { max-width: 1100px; margin: 0 auto; }
+  .course-bg .section-label { color: var(--gold); }
+  .course-bg h2 { color: #fff; }
+  .course-bg p { color: rgba(255,255,255,0.7); }
+  .course-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem; align-items: start; margin-top: 2rem; }
+  .course-points { display: flex; flex-direction: column; }
+  .course-point {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    padding: 1rem 1.25rem; border-bottom: none;
+  }
+  .course-point:first-child { border-radius: 6px 6px 0 0; }
+  .course-point:last-child { border-radius: 0 0 6px 6px; border-bottom: 1px solid rgba(255,255,255,0.12); }
+  .course-point .row { display: flex; align-items: center; gap: 1rem; }
+  .course-point .km { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--gold); font-weight: 700; min-width: 55px; }
+  .course-point .detail strong { font-size: 0.95rem; color: #fff; font-weight: 500; display: block; }
+  .course-point .detail p { font-size: 0.82rem; color: rgba(255,255,255,0.6); margin: 0.2rem 0 0.4rem; }
+  .course-point .badges { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .course-badge { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 2px; }
+  .cb-half { background: rgba(212,160,23,0.3); color: var(--gold); }
+  .cb-10k { background: rgba(46,134,193,0.3); color: #5dade2; }
+  .cb-relay { background: rgba(192,57,43,0.3); color: #ec7063; }
+  #map { height: 420px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.15); }
+  .map-legend { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 1rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: rgba(255,255,255,0.7); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Info cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+  .card {
+    background: #fff; border-radius: 6px; border: 1px solid var(--light-border);
+    padding: 1.75rem; transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,82,118,0.1); }
+  .card-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+  .card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ocean); margin-bottom: 0.4rem; }
+  .card p { font-size: 0.9rem; margin: 0; }
+
+  /* Register */
+  .reg-box {
+    background: #fff; border-radius: 8px; border: 1px solid var(--light-border);
+    padding: 3rem; text-align: center; max-width: 560px; margin: 0 auto;
+  }
+
+  /* Timetable */
+  .timetable-list { max-width: 640px; margin: 2.5rem auto 0; }
+  .timetable-item {
+    display: flex; align-items: flex-start; gap: 1.75rem;
+    padding: 1.1rem 0; border-bottom: 1px solid var(--light-border);
+  }
+  .timetable-item:last-child { border-bottom: none; }
+  .tt-time {
+    font-family: 'Playfair Display', serif; font-weight: 700;
+    color: var(--ocean); font-size: 1.1rem; min-width: 130px; flex-shrink: 0;
+  }
+  .tt-detail strong { display: block; color: var(--dark); font-size: 1rem; font-weight: 500; }
+  .tt-detail p { font-size: 0.85rem; color: var(--mid); margin: 0.2rem 0 0; }
+
+  /* FAQ */
+  .faq-list { max-width: 720px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid var(--light-border); padding: 1.5rem 0; }
+  .faq-q { font-weight: 500; color: var(--ocean); cursor: pointer; font-size: 1.05rem; display: flex; justify-content: space-between; align-items: center; }
+  .faq-a { color: var(--mid); margin-top: 0.75rem; font-size: 0.95rem; line-height: 1.7; display: none; }
+  .faq-a.open { display: block; }
+  .faq-toggle { font-size: 1.4rem; color: var(--ocean-light); transition: transform 0.2s; flex-shrink: 0; margin-left: 1rem; }
+  .faq-toggle.open { transform: rotate(45deg); }
+
+  /* Contact */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 4rem; align-items: start; max-width: 860px; margin: 0 auto; }
+  .contact-info h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ocean); margin-bottom: 0.3rem; }
+  .contact-info p { font-size: 0.95rem; }
+  .contact-info a { color: var(--ocean-light); text-decoration: none; }
+  .contact-info a:hover { text-decoration: underline; }
+  .contact-detail { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .contact-detail-icon { font-size: 1.2rem; margin-top: 0.1rem; }
+  .contact-form { background: #fff; border-radius: 8px; border: 1px solid var(--light-border); padding: 2rem; }
+  .form-row { margin-bottom: 1.1rem; }
+  .form-row label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--ocean); margin-bottom: 0.35rem; letter-spacing: 0.03em; text-transform: uppercase; }
+  .form-row input, .form-row select, .form-row textarea {
+    width: 100%; padding: 0.7rem 0.9rem; border: 1.5px solid #ddd; border-radius: 4px;
+    font-size: 0.95rem; font-family: 'DM Sans', sans-serif; color: var(--dark); background: #fff; transition: border-color 0.2s;
+  }
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus { outline: none; border-color: var(--ocean-light); }
+  .form-row textarea { resize: vertical; min-height: 110px; }
+  .form-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-success {
+    display: none; background: #eaf7f0; border: 1px solid #a3dfc0;
+    border-radius: 6px; padding: 1rem 1.25rem; text-align: center;
+    color: #1a7a4a; font-size: 0.95rem; margin-top: 1rem;
+  }
+
+  footer {
+    background: var(--dark); color: rgba(255,255,255,0.5);
+    text-align: center; padding: 2.5rem 2rem; font-size: 0.85rem;
+  }
+  footer .footer-logo { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem; }
+  footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  footer a:hover { color: var(--gold); }
+
+  @media (max-width: 768px) {
+    .about-grid, .course-layout, .contact-grid { grid-template-columns: 1fr; }
+    .btn-solid { margin-left: 0; margin-top: 0.75rem; display: block; text-align: center; }
+    nav ul { display: none; }
+    .form-two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">
+    <img src="logo-circle.png" alt="Ahuriri Half Marathon logo">
+    Ahuriri <span>&nbsp;Half Marathon</span>
+  </a>
+  <ul>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#course">Course</a></li>
+    <li><a href="#timetable">Timetable</a></li>
+    <li><a href="#sponsors">Sponsors</a></li>
+    <li><a href="#register">Register</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <img src="logo-circle.png" alt="Ahuriri Half Marathon" style="width: clamp(140px, 22vw, 200px); margin-bottom: 1.5rem; filter: drop-shadow(0 4px 16px rgba(0,0,0,0.3));">
+  <div class="hero-tag">Napier, Hawke's Bay · New Zealand</div>
+  <h1>Ahuriri<br><em>Half Marathon</em></h1>
+  <p class="subtitle">8am, 11 October 2026 · Run the Bay</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">21.1km</div><div class="lbl">Half Marathon</div></div>
+    <div class="hero-stat"><div class="num">10km</div><div class="lbl">Fun Run</div></div>
+    <div class="hero-stat"><div class="num">Relay</div><div class="lbl">4-Person Team</div></div>
+  </div>
+  <div>
+    <a href="#register" class="btn-primary">Register Now</a>
+    <a href="#course" class="btn-solid">View Course</a>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div>
+      <div class="section-label">About the event</div>
+      <h2>Run along the beautiful Ahuriri Estuary</h2>
+      <p>The Ahuriri Half Marathon takes runners through some of Hawke's Bay's most stunning scenery — from the historic Ahuriri waterfront along the coast and back.</p>
+      <p>Whether you're chasing a personal best, tackling your first 10km, or teaming up with friends for the relay, this event is designed for runners of all abilities.</p>
+      <p>All finishers receive a medal, and post-race refreshments will be available at the finish line.</p>
+
+      <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--light-border);">
+        <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ocean-light); margin-bottom: 1rem;">Proudly brought to you by</p>
+        <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+          <a href="https://www.napierharriers.co.nz/" target="_blank" rel="noopener" title="Napier Harriers"
+            style="display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--ocean); font-size: 0.9rem; font-weight: 500; transition: opacity 0.2s;"
+            onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+            <img src="napierharriers.png" alt="Napier Harriers" style="height: 48px; width: auto;">
+            <span>Napier Harriers</span>
+          </a>
+          <div style="width: 1px; height: 36px; background: var(--light-border);"></div>
+          <a href="https://www.sporty.co.nz/hastingsharriers" target="_blank" rel="noopener" title="Hastings Harriers"
+            style="display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--ocean); font-size: 0.9rem; font-weight: 500; transition: opacity 0.2s;"
+            onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+            <img src="hastingsharriers.png" alt="Hastings Harriers" style="height: 48px; width: auto;">
+            <span>Hastings Harriers</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="about-photo"><img src="napier.jpg" alt="Ahuriri waterfront"></div>
+  </div>
+</section>
+
+<!-- EVENTS & PRICING -->
+<section id="events" style="background:#fff; max-width:100%; padding:5rem 2rem;">
+  <div style="max-width:1100px; margin:0 auto;">
+    <div class="section-label" style="text-align:center;">Choose your event</div>
+    <h2 style="text-align:center;">Three ways to race</h2>
+    <p style="text-align:center; max-width:600px; margin:0 auto 1rem;">Whether you're a seasoned runner, a 10km newcomer, or want to share the experience with friends — there's an event for you.</p>
+    <div class="events-grid">
+
+      <div class="event-card featured">
+        <div class="event-badge badge-half">Half Marathon</div>
+        <h3>Half Marathon</h3>
+        <p class="event-distance">21.1km · Two-loop out &amp; back course</p>
+        <div class="event-price">$40</div>
+        <p class="event-price-note">Per person</p>
+        <ul class="event-features">
+          <li>Two loops of the 10.55km out &amp; back course</li>
+          <li>Finisher medal</li>
+          <li>Aid stations at 5km, 10.5km, 16km</li>
+          <li>Post-race refreshments</li>
+        </ul>
+        <a href="https://www.webscorer.com/register?pid=1&raceid=432522" target="_blank" class="event-cta rust">Register — $40</a>
+      </div>
+
+      <div class="event-card">
+        <div class="event-badge badge-10k">10km Run</div>
+        <h3>10km</h3>
+        <p class="event-distance">10km · One-loop out &amp; back course</p>
+        <div class="event-price">$25</div>
+        <p class="event-price-note">Per person</p>
+        <ul class="event-features">
+          <li>One loop of the out &amp; back course</li>
+          <li>Finisher medal</li>
+          <li>Aid station at 5km turnaround</li>
+          <li>Post-race refreshments</li>
+        </ul>
+        <a href="https://www.webscorer.com/register?pid=1&raceid=432522" target="_blank" class="event-cta">Register — $25</a>
+      </div>
+
+      <div class="event-card">
+        <div class="event-badge badge-relay">Team Relay</div>
+        <h3>4-Person Relay</h3>
+        <p class="event-distance">21.1km · 4 runners × ~5km each</p>
+        <div class="event-price">$80</div>
+        <p class="event-price-note">Per team ($20 per person)</p>
+        <ul class="event-features">
+          <li>Four legs of approximately 5km each</li>
+          <li>Relay change-over zones</li>
+          <li>Finisher medals for all team members</li>
+          <li>Post-race refreshments</li>
+        </ul>
+        <a href="https://www.webscorer.com/register?pid=1&raceid=432522" target="_blank" class="event-cta">Register team — $80</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- COURSE MAP -->
+<div class="course-bg" id="course">
+  <div class="course-inner">
+    <div class="section-label">The route</div>
+    <h2>Course overview</h2>
+    <p>A flat, scenic out-and-back course starting and finishing at the Ahuriri Waterfront. The half marathon completes two loops; the 10km completes one. Relay change-over zones are at approximately 5km, 10km, and 15km.</p>
+    <div class="course-layout">
+      <div>
+        <div class="course-points">
+          <div class="course-point">
+            <div class="row">
+              <div class="km">Start</div>
+              <div class="detail">
+                <strong>Ahuriri Waterfront, Napier</strong>
+                <p>Start &amp; finish line</p>
+                <div class="badges"><span class="course-badge cb-half">Half</span><span class="course-badge cb-10k">10km</span><span class="course-badge cb-relay">Relay</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="course-point">
+            <div class="row">
+              <div class="km">~5km</div>
+              <div class="detail">
+                <strong>Relay change-over zone 1</strong>
+                <p>Aid station · 10km turnaround point</p>
+                <div class="badges"><span class="course-badge cb-half">Half</span><span class="course-badge cb-10k">10km turn</span><span class="course-badge cb-relay">Relay leg 1→2</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="course-point">
+            <div class="row">
+              <div class="km">~10km</div>
+              <div class="detail">
+                <strong>Relay change-over zone 2</strong>
+                <p>Aid station · End of loop 1 for half marathon</p>
+                <div class="badges"><span class="course-badge cb-half">Half</span><span class="course-badge cb-relay">Relay leg 2→3</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="course-point">
+            <div class="row">
+              <div class="km">~15km</div>
+              <div class="detail">
+                <strong>Relay change-over zone 3</strong>
+                <p>Aid station</p>
+                <div class="badges"><span class="course-badge cb-half">Half</span><span class="course-badge cb-relay">Relay leg 3→4</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="course-point">
+            <div class="row">
+              <div class="km">21.1km</div>
+              <div class="detail">
+                <strong>Finish line — Ahuriri Waterfront</strong>
+                <p>Medals, refreshments &amp; celebrations</p>
+                <div class="badges"><span class="course-badge cb-half">Half</span><span class="course-badge cb-relay">Relay</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:1.5rem; font-size:0.85rem; color:rgba(255,255,255,0.5);">
+          GPX file available to download for your GPS device.
+          <a href="Ahuriri_Half_Marathon.gpx" download style="color:var(--gold); text-decoration:underline;">Download GPX</a>
+        </p>
+      </div>
+      <div>
+        <div id="map"></div>
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#e74c3c;"></div> Start / Finish</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f39c12;"></div> Change-over / Aid</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#3498db; border-radius:0; height:3px; width:20px;"></div> Course</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TIMETABLE -->
+<section id="timetable">
+  <div class="section-label" style="text-align:center;">Race day</div>
+  <h2 style="text-align:center;">Event timetable</h2>
+  <p style="text-align:center; max-width:600px; margin:0 auto;">Here's the running order for race morning, Sunday 11 October 2026. All times below are on race day.</p>
+  <div class="timetable-list">
+    <div class="timetable-item">
+      <div class="tt-time">7:00am</div>
+      <div class="tt-detail">
+        <strong>Race registration &amp; bib collection opens</strong>
+        <p>Perfume Point</p>
+      </div>
+    </div>
+    <div class="timetable-item">
+      <div class="tt-time">7:45am</div>
+      <div class="tt-detail">
+        <strong>Race briefing</strong>
+        <p>Perfume Point</p>
+      </div>
+    </div>
+    <div class="timetable-item">
+      <div class="tt-time">8:00am</div>
+      <div class="tt-detail">
+        <strong>Race start</strong>
+      </div>
+    </div>
+    <div class="timetable-item">
+      <div class="tt-time">11:00am</div>
+      <div class="tt-detail">
+        <strong>Course closes</strong>
+      </div>
+    </div>
+    <div class="timetable-item">
+      <div class="tt-time">Approx. 11:30am</div>
+      <div class="tt-detail">
+        <strong>Prize giving</strong>
+      </div>
+    </div>
+    <div class="timetable-item">
+      <div class="tt-time">ASAP after pack down</div>
+      <div class="tt-detail">
+        <strong>Results available</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HIGHLIGHTS -->
+<section>
+  <div class="section-label">Event info</div>
+  <h2>What to expect</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🌊</div>
+      <h3>Flat, fast coastal route</h3>
+      <p>Minimal elevation — ideal for a personal best. Enjoy ocean views the entire way.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏅</div>
+      <h3>Finisher medals</h3>
+      <p>Every finisher (and relay team member) receives a custom Ahuriri Half Marathon medal.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🍊</div>
+      <h3>Aid stations</h3>
+      <p>Water and nutrition at multiple points along the course. Relay change-over zones double as aid stations.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎽</div>
+      <h3>Bag drop</h3>
+      <p>Secure bag drop available at the start/finish area on race day.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🍻</div>
+      <h3>Post-race celebration</h3>
+      <p>Refreshments and a festive atmosphere at the finish. Celebrate with fellow runners.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPONSORS & PARTNERS -->
+<section id="sponsors" style="background:#fff; max-width:100%; padding:5rem 2rem; border-bottom:1px solid var(--light-border);">
+  <div style="max-width:1100px; margin:0 auto; text-align:center;">
+    <div class="section-label">Our supporters</div>
+    <h2>Sponsors &amp; partners</h2>
+    <p style="max-width:600px; margin:0 auto 2.5rem;">We're grateful to the organisations supporting the Ahuriri Half Marathon. Interested in becoming a partner? <a href="#contact" style="color:var(--ocean-light);">Get in touch</a>.</p>
+    <div style="display:flex; align-items:center; justify-content:center; gap:3rem; flex-wrap:wrap;">
+      <a href="https://www.napierharriers.co.nz/" target="_blank" rel="noopener" title="Napier Harriers"
+        style="display:flex; align-items:center; transition:opacity 0.2s;"
+        onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+        <img src="napierharriers.png" alt="Napier Harriers" style="height:56px; width:auto;">
+      </a>
+      <a href="https://www.sporty.co.nz/hastingsharriers" target="_blank" rel="noopener" title="Hastings Harriers"
+        style="display:flex; align-items:center; transition:opacity 0.2s;"
+        onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+        <img src="hastingsharriers.png" alt="Hastings Harriers" style="height:56px; width:auto;">
+      </a>
+      <a href="https://www.sporthb.net.nz/" target="_blank" rel="noopener" title="Sport Hawke's Bay"
+        style="display:flex; align-items:center; transition:opacity 0.2s;"
+        onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+        <img src="sporthb.png" alt="Sport Hawke's Bay" style="height:44px; width:auto;">
+      </a>
+      <a href="https://www.shoeclinic.co.nz/?gad_source=1&gad_campaignid=23843678635&gbraid=0AAAAADLNHWgVqZVPpNPgs0VN4vWh-imbn&gclid=Cj0KCQjw94bTBhDQARIsAN3vv0zKFVRc8J1jGErRb9hI1DbnZvuCKYyyuqbyP40FjKESZJRNvYJ5Z38aAiLeEALw_wcB" target="_blank" rel="noopener" title="Shoe Clinic - Napier"
+        style="display:flex; align-items:center; transition:opacity 0.2s;"
+        onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+        <img src="shoeclinic.png" alt="Shoe Clinic - Napier" style="height:56px; width:auto;">
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register" style="background:#fff; max-width:100%; padding:5rem 2rem;">
+  <div style="max-width:1100px; margin:0 auto; text-align:center;">
+    <div class="section-label">Sign up</div>
+    <h2>Registration</h2>
+    <div class="reg-box">
+      <p>Ready to run? Register now through our secure online registration system.</p>
+      <p style="font-size:0.85rem; color:#999; margin-bottom:2rem;">
+        Half marathon: $40 &nbsp;·&nbsp; 10km: $25 &nbsp;·&nbsp; 4-person relay: $80/team ($20pp)
+      </p>
+      <a href="https://www.webscorer.com/register?pid=1&raceid=432522" target="_blank" class="btn-primary" style="font-size:1.05rem; padding:1rem 3rem;">
+        Register now →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-label">Questions</div>
+  <h2 style="text-align:center;">Frequently asked questions</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What events are on offer? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">There are three events: the Half Marathon (21.1km, $40), the 10km run ($25), and a 4-person relay team for the half marathon distance at $20 per person ($80 per team). All events start and finish at the Ahuriri Waterfront in Napier.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How does the relay work? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">The relay is for teams of 4 people, each running approximately 5km. Change-over zones are located at around the 5km, 10km, and 15km marks of the course. Each team member receives a finisher medal.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">When and where does the race start? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">The race starts at the Ahuriri Waterfront, Napier, on Sunday 11 October 2026. See the <a href="#timetable" style="color:var(--ocean-light);">event timetable</a> above for the full race day schedule, including registration, briefing, and start times.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is there a minimum age to enter? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">Participants must be at least 16 years of age on race day to enter the half marathon. Participants must be at least 12 years of age on race day to enter the 10km. There is no age limit for relay team members.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is there a time limit? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">Yes, there will be a 3 hour time limit for all distances.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I run with a dog or pushchair? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">While we want this event to be as inclusive as possible, from a health &amp; safety perspective we will not be allowing participants to run/walk with a dog or pushchair.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I transfer or defer my entry? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">Transfer and deferral policies will be outlined at the time registrations open.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is there parking nearby? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">Yes, there is parking available in the Ahuriri area. Detailed directions and parking information will be included in your pre-race briefing email.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I download the GPX course file? <span class="faq-toggle">+</span></div>
+      <div class="faq-a">Yes! You can download the GPX file from the course section above to load onto your GPS watch or device before race day.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="padding-bottom:3rem;">
+  <div class="section-label" style="text-align:center;">Get in touch</div>
+  <h2 style="text-align:center;">Contact us</h2>
+  <p style="text-align:center; max-width:540px; margin:0 auto 2.5rem;">Have a question not answered above? Fill in the form and we'll get back to you as soon as possible.</p>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="contact-detail">
+        <div class="contact-detail-icon">✉️</div>
+        <div>
+          <h3>Email us directly</h3>
+          <p><a href="mailto:info@ahuririhalf.co.nz">info@ahuririhalf.co.nz</a></p>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📍</div>
+        <div>
+          <h3>Race location</h3>
+          <p>Ahuriri Waterfront<br>Napier, Hawke's Bay<br>New Zealand</p>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📅</div>
+        <div>
+          <h3>Race date</h3>
+          <p>Sunday 11 October 2026</p>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📱</div>
+        <div>
+          <h3>Follow us</h3>
+          <!-- SOCIAL: replace the # with your actual URLs when ready -->
+          <p><a href="https://www.facebook.com/AhuririHalf/">Facebook</a> &nbsp;·&nbsp; <a href="https://www.instagram.com/ahuririhalfmarathon/">Instagram</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <!-- Formspree: replace YOUR_FORM_ID with your actual Formspree form ID -->
+      <form id="contactForm" action="https://formspree.io/f/xwvzgnzk" method="POST">
+        <div class="form-two-col">
+          <div class="form-row">
+            <label for="fname">First name</label>
+            <input type="text" id="fname" name="first_name" required placeholder="Jane">
+          </div>
+          <div class="form-row">
+            <label for="lname">Last name</label>
+            <input type="text" id="lname" name="last_name" required placeholder="Smith">
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="cemail">Email address</label>
+          <input type="email" id="cemail" name="email" required placeholder="jane@example.com">
+        </div>
+        <div class="form-row">
+          <label for="enquiry">Enquiry type</label>
+          <select id="enquiry" name="enquiry_type">
+            <option value="">Select one...</option>
+            <option value="registration">Registration question</option>
+            <option value="course">Course information</option>
+            <option value="relay">Relay team query</option>
+            <option value="sponsorship">Sponsorship</option>
+            <option value="volunteering">Volunteering</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required placeholder="What would you like to know?"></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%; border-radius:4px; padding:0.85rem;">Send message</button>
+        <div class="form-success" id="formSuccess">
+          ✓ Thanks! Your message has been sent. We'll be in touch shortly.
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <img src="logo-circle.png" alt="Ahuriri Half Marathon" style="height:64px; width:64px; object-fit:contain; margin-bottom:0.75rem; opacity:0.85;">
+  <div class="footer-logo">Ahuriri Half Marathon</div>
+  <p>11 October 2026 · Napier, Hawke's Bay, New Zealand</p>
+  <!-- SOCIAL: replace the # with your actual URLs when ready -->
+  <p style="margin-top:0.5rem;"><a href="https://www.facebook.com/AhuririHalf/">Facebook</a> · <a href="https://www.instagram.com/ahuririhalfmarathon/">Instagram</a> · <a href="mailto:info@ahuririhalf.co.nz">Contact</a></p>
+  <p style="margin-top:1.5rem; font-size:0.75rem;">© 2026 Ahuriri Half Marathon. All rights reserved.</p>
+</footer>
+
+<script>
+const courseCoords = [[-39.47853,176.89603],[-39.47968,176.8954],[-39.48046,176.89517],[-39.48073,176.89568],[-39.48126,176.89765],[-39.48176,176.89731],[-39.48175,176.89603],[-39.48185,176.89488],[-39.4825,176.89456],[-39.48405,176.89375],[-39.48489,176.89336],[-39.48574,176.89271],[-39.48523,176.89199],[-39.48512,176.89137],[-39.48516,176.89089],[-39.48504,176.89002],[-39.48304,176.8892],[-39.48185,176.88885],[-39.48172,176.88938],[-39.48134,176.89218],[-39.48096,176.89312],[-39.48,176.89362],[-39.47954,176.893],[-39.48021,176.89152],[-39.48055,176.88887],[-39.4799,176.8872],[-39.47921,176.88566],[-39.47817,176.88396],[-39.4778,176.88393],[-39.47598,176.88253],[-39.47564,176.88204],[-39.47424,176.88089],[-39.47216,176.87966],[-39.47094,176.87844],[-39.46999,176.87814],[-39.46812,176.87733],[-39.46551,176.87605],[-39.46373,176.87525],[-39.46605,176.87633],[-39.46889,176.87769],[-39.47043,176.87818],[-39.47099,176.8787],[-39.47292,176.88008],[-39.47442,176.88126],[-39.47573,176.88214],[-39.47656,176.88297],[-39.47786,176.88396],[-39.47827,176.88444],[-39.47936,176.88634],[-39.48008,176.88757],[-39.48052,176.88867],[-39.48019,176.89126],[-39.47939,176.89372],[-39.48094,176.89332],[-39.48142,176.89184],[-39.48172,176.88938],[-39.48183,176.88888],[-39.48249,176.88899],[-39.48464,176.88985],[-39.48516,176.89083],[-39.48516,176.89122],[-39.48521,176.89194],[-39.48565,176.89257],[-39.48561,176.89299],[-39.48489,176.89336],[-39.48405,176.89375],[-39.4825,176.89456],[-39.48185,176.89488],[-39.48175,176.89603],[-39.48132,176.8977],[-39.48096,176.89653],[-39.48055,176.89523],[-39.47951,176.89545],[-39.47883,176.89566],[-39.48053,176.89518],[-39.48077,176.89575],[-39.48129,176.8977],[-39.48183,176.89697],[-39.48173,176.89496],[-39.48233,176.89471],[-39.48395,176.89382],[-39.48478,176.89334],[-39.48554,176.89306],[-39.48575,176.89242],[-39.48521,176.89194],[-39.48516,176.89122],[-39.48516,176.89083],[-39.48464,176.88985],[-39.48218,176.88887],[-39.4818,176.88893],[-39.48162,176.8902],[-39.48115,176.89255],[-39.47962,176.89358],[-39.47988,176.8925],[-39.4805,176.89068],[-39.48056,176.88864],[-39.48035,176.88803],[-39.47943,176.88655],[-39.47898,176.88529],[-39.47817,176.88396],[-39.4778,176.88393],[-39.47598,176.88253],[-39.47564,176.88204],[-39.47424,176.88089],[-39.47216,176.87966],[-39.47094,176.87844],[-39.46999,176.87814],[-39.46812,176.87733],[-39.46551,176.87605],[-39.46452,176.87563],[-39.46658,176.87661],[-39.46907,176.87773],[-39.4708,176.87832],[-39.47108,176.87881],[-39.47339,176.88048],[-39.47448,176.88134],[-39.47575,176.88221],[-39.47715,176.88342],[-39.47798,176.88388],[-39.47842,176.88474],[-39.47943,176.88655],[-39.48035,176.88803],[-39.48033,176.89104],[-39.48007,176.89361],[-39.48137,176.89204],[-39.48166,176.88984],[-39.4818,176.88893],[-39.48212,176.88885],[-39.48411,176.88967],[-39.48527,176.89073],[-39.48527,176.89123],[-39.48514,176.89147],[-39.48566,176.89241],[-39.48561,176.89299],[-39.48478,176.89334],[-39.48395,176.89382],[-39.48233,176.89471],[-39.48173,176.89496],[-39.48183,176.89697],[-39.48129,176.8977],[-39.48077,176.89575],[-39.48053,176.89518],[-39.47883,176.89566]];
+
+window.addEventListener('load', function() {
+  const map = L.map('map').setView([-39.474, 176.886], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18
+  }).addTo(map);
+  L.polyline(courseCoords, { color: '#3498db', weight: 3.5, opacity: 0.9 }).addTo(map);
+  const startIcon = L.divIcon({
+    html: '<div style="background:#e74c3c;width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>',
+    className: '', iconAnchor: [7, 7]
+  });
+  const relayIcon = L.divIcon({
+    html: '<div style="background:#f39c12;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>',
+    className: '', iconAnchor: [6, 6]
+  });
+  L.marker([-39.47853, 176.89603], {icon: startIcon}).addTo(map).bindPopup('<strong>Start / Finish</strong><br>Ahuriri Waterfront');
+  L.marker([-39.46551, 176.87605], {icon: relayIcon}).addTo(map).bindPopup('<strong>~5km</strong><br>Relay change-over zone 1<br>10km turnaround');
+  L.marker([-39.46373, 176.87525], {icon: relayIcon}).addTo(map).bindPopup('<strong>~15km (second loop)</strong><br>Relay change-over zone 3');
+});
+
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = contactForm.querySelector('button[type="submit"]');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    try {
+      const res = await fetch(contactForm.action, {
+        method: 'POST',
+        body: new FormData(contactForm),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        contactForm.reset();
+        document.getElementById('formSuccess').style.display = 'block';
+        btn.textContent = 'Sent!';
+      } else {
+        btn.textContent = 'Error — please try again';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Error — please try again';
+      btn.disabled = false;
+    }
+  });
+}
+
+function toggleFaq(el) {
+  const ans = el.nextElementSibling;
+  const tog = el.querySelector('.faq-toggle');
+  const isOpen = ans.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-toggle').forEach(t => t.classList.remove('open'));
+  if (!isOpen) { ans.classList.add('open'); tog.classList.add('open'); }
+}
+</script>
+</body>
+</html>
