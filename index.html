@@ -260,6 +260,9 @@
   .soldout-banner .so-main span { color: #ffe9a8; font-weight: 700; }
   .soldout-banner .so-sub { font-size: 0.95rem; color: rgba(255,255,255,0.85); margin-top: 0.4rem; }
   .soldout-banner .so-sub { max-width: 640px; margin-left: auto; margin-right: auto; }
+  .soldout-banner .so-sub a { color: #fff; text-decoration: underline; overflow-wrap: anywhere; }
+  .reg-box a { color: var(--ocean-light); overflow-wrap: anywhere; }
+  .event-cta.closed { background: #b9b9b9; color: #fff; cursor: default; pointer-events: none; }
   .soldout-banner .so-link {
     display: inline-block; margin-top: 0.9rem; background: #fff; color: var(--rust);
     font-weight: 500; text-decoration: none; padding: 0.55rem 1.6rem; border-radius: 3px;
@@ -338,9 +341,8 @@
 
 <!-- SOLD OUT BANNER -->
 <div class="soldout-banner" role="status">
-  <div class="so-main">Sold out <span>– waitlist operating</span></div>
-  <div class="so-sub">All entries have been filled. You can still register through Webscorer, and you'll be added to the waitlist. If a spot becomes available, we'll invite you to enter.</div>
-  <a href="https://www.webscorer.com/register?pid=1&raceid=432522" target="_blank" rel="noopener" class="so-link">Join the waitlist</a>
+  <div class="so-main">Registrations closed</div>
+  <div class="so-sub">Please keep an eye on the Ahuriri Half Facebook page for event week updates: <a href="https://www.facebook.com/AhuririHalf/" target="_blank" rel="noopener">https://www.facebook.com/AhuririHalf/</a></div>
 </div>
 
 <!-- HERO -->
@@ -355,7 +357,7 @@
     <div class="hero-stat"><div class="num">Relay</div><div class="lbl">4-Person Team</div></div>
   </div>
   <div>
-    <a href="#register" class="btn-primary">Join the waitlist</a>
+    <a href="#participant-info" class="btn-primary">Participant info</a>
     <a href="#course" class="btn-solid">View Course</a>
   </div>
 </div>
@@ -379,12 +381,11 @@
           <tr><td>2:00–4:00pm</td><td>Registration and bib collection (Breakwater Room, East Pier Hotel)</td></tr>
           <tr class="day"><td colspan="2">Sunday 11 October</td></tr>
           <tr><td>7:00am</td><td>Registration and bib collection opens (Te Karaka / Perfume Point)</td></tr>
-          <tr><td>7:45am</td><td>Registration closes</td></tr>
-          <tr><td>7:45am</td><td>Race briefing (Te Karaka / Perfume Point). Please be there.</td></tr>
-          <tr><td>8:00am</td><td>Half marathon race start (individuals and teams)</td></tr>
-          <tr><td>8:15am</td><td>10km race start</td></tr>
+          <tr><td>7:45am</td><td>Registration closes and race briefing (Te Karaka / Perfume Point). All participants must attend</td></tr>
+          <tr><td>8:00am</td><td>Half marathon start (individuals and relay teams)</td></tr>
+          <tr><td>8:15am</td><td>10km start</td></tr>
           <tr><td>11:15am</td><td>Course closes</td></tr>
-          <tr><td>~11:30am</td><td>Prize-giving at East Pier Hotel</td></tr>
+          <tr><td>~11:30am</td><td>Prize-giving (Ocean Suite, East Pier Hotel – this is the room facing Te Karaka Reserve)</td></tr>
         </table>
         <p>Results will be posted as soon as possible after pack-down.</p>
         <p>Please allow plenty of time to park, grab a coffee from one of Ahuriri's local cafés, and use the toilet facilities before the race briefing at 7:45am. If you haven't collected your bib on Saturday afternoon, these will be available for collection from the event hub at Te Karaka / Perfume Point from 7:00am on race morning.</p>
@@ -407,12 +408,12 @@
         <ul>
           <li>Portable toilets at the event hub</li>
           <li>Public toilets near the Te Karaka / Perfume Point car park</li>
-          <li>Public toilets opposite The Sauna at the end of the fishing club car park</li>
+          <li>Public toilets opposite The Sauna at the end of the Hawke's Bay Sport Fishing Club car park</li>
           <li>Public toilets next to the Hardinge Road playground, on the other side of the Boardwalk Beach Bar &amp; Bistro</li>
+          <li>Additional portable toilets will be available at the relay changeover point at the far end of the course.</li>
         </ul>
-        <p>There will also be portable toilets at the relay changeover point at the far end of the course.</p>
         <h4>Bag drop</h4>
-        <p>A secure bag drop is available at the start/finish area. Before you leave your bag, please make sure you get a drop bag label from the event team at the registration desk.</p>
+        <p>A secure bag drop service is available at the start/finish area. Before you leave your bag, please make sure you get a drop bag label from the event team at the registration desk.</p>
       </div>
     </details>
 
@@ -494,7 +495,7 @@
       <summary>🏅 After the race</summary>
       <div class="pi-body">
         <p>Every finisher (including all relay team members) receives a custom medal, and there will be refreshments at the finish. Join us for prize-giving in the Ocean Suite at East Pier Hotel at around 11:30am. The East Pier bar and restaurant will be open to purchase food and drinks.</p>
-        <p>A big thank you to our supporters for helping make this event possible: Napier Harriers, Hastings Harriers, Sport Hawke's Bay, Shoe Clinic Napier, Picky Juices and Smoothies, Wee Doo Loos, PAK'nSAVE Napier City and East Pier Hotel.</p>
+        <p>A big thank you to our supporters for helping make this event possible: Napier Harriers, Hastings Harriers, Sport Hawke's Bay, Shoe Clinic Napier, Picky Juices and Smoothies, Wee Doo Loos, PAK'nSAVE Napier City, SuperVision Sports and East Pier Hotel.</p>
         <p>Any questions? Email <a href="mailto:info@ahuririhalf.co.nz">info@ahuririhalf.co.nz</a>.</p>
       </div>
     </details>
@@ -555,7 +556,7 @@
           <li>On-course aid stations</li>
           <li>Post-race refreshments</li>
         </ul>
-        <a href="https://www.webscorer.com/register?pid=1&raceid=432522" target="_blank" class="event-cta rust">Join the waitlist — $40</a>
+        <span class="event-cta closed">Registrations closed</span>
       </div>
 
       <div class="event-card">
@@ -570,7 +571,7 @@
           <li>On-course aid stations</li>
           <li>Post-race refreshments</li>
         </ul>
-        <a href="https://www.webscorer.com/register?pid=1&raceid=432522" target="_blank" class="event-cta">Join the waitlist — $25</a>
+        <span class="event-cta closed">Registrations closed</span>
       </div>
 
       <div class="event-card">
@@ -585,7 +586,7 @@
           <li>Finisher medals for all team members</li>
           <li>Post-race refreshments</li>
         </ul>
-        <a href="https://www.webscorer.com/register?pid=1&raceid=432522" target="_blank" class="event-cta">Join the waitlist — $80</a>
+        <span class="event-cta closed">Registrations closed</span>
       </div>
 
     </div>
@@ -701,7 +702,7 @@
       <div class="tt-date">Saturday 10 October</div>
       <div class="tt-time">2:00-4:00pm</div>
       <div class="tt-detail">
-        <strong>Advanced bib collection</strong>
+        <strong>Registration and bib collection</strong>
         <p>Breakwater Room, East Pier Hotel</p>
       </div>
     </div>
@@ -709,7 +710,7 @@
       <div class="tt-date">Sunday 11 October</div>  
       <div class="tt-time">7:00am</div>
       <div class="tt-detail">
-        <strong>Race registration &amp; bib collection opens</strong>
+        <strong>Registration and bib collection opens</strong>
         <p>Te Karaka/Perfume Point</p>
       </div>
     </div>
@@ -717,30 +718,22 @@
       <div class="tt-date"></div>  
       <div class="tt-time">7:45am</div>
       <div class="tt-detail">
-        <strong>Race registration closes</strong>
-        <p>Te Karaka/Perfume Point</p>
-      </div>
-    </div>
-    <div class="timetable-item">
-      <div class="tt-date"></div>  
-      <div class="tt-time">7:45am</div>
-      <div class="tt-detail">
-        <strong>Race briefing</strong>
-        <p>Te Karaka/Perfume Point</p>
+        <strong>Registration closes and race briefing</strong>
+        <p>Te Karaka/Perfume Point. All participants must attend</p>
       </div>
     </div>
    <div class="timetable-item">
       <div class="tt-date"></div>  
       <div class="tt-time">8:00am</div>
       <div class="tt-detail">
-        <strong>Race start - Half marathon distance (individuals and teams)</strong>
+        <strong>Half marathon start (individuals and relay teams)</strong>
       </div>
     </div>
    <div class="timetable-item">
       <div class="tt-date"></div>  
       <div class="tt-time">8:15am</div>
       <div class="tt-detail">
-        <strong>Race start - 10km</strong>
+        <strong>10km start</strong>
       </div>
     </div>
     <div class="timetable-item">
@@ -754,7 +747,8 @@
       <div class="tt-date"></div>  
       <div class="tt-time">Approx. 11:30am</div>
       <div class="tt-detail">
-        <strong>Prize giving, East Pier Hotel</strong>
+        <strong>Prize-giving</strong>
+        <p>Ocean Suite, East Pier Hotel – this is the room facing Te Karaka Reserve</p>
       </div>
     </div>
     <div class="timetable-item">
@@ -861,13 +855,11 @@
     <div class="section-label">Sign up</div>
     <h2>Registration</h2>
     <div class="reg-box">
-      <p>The event is sold out, but you can still register through our online registration system. You'll be added to the waitlist, and if a spot becomes available, we'll invite you to enter.</p>
+      <p><strong>Registrations are now closed.</strong></p>
+      <p>Please keep an eye on the Ahuriri Half Facebook page for event week updates: <a href="https://www.facebook.com/AhuririHalf/" target="_blank" rel="noopener">https://www.facebook.com/AhuririHalf/</a></p>
       <p style="font-size:0.85rem; color:#999; margin-bottom:2rem;">
         Half marathon: $40 &nbsp;·&nbsp; 10km: $25 &nbsp;·&nbsp; 4-person relay: $80/team ($20pp)
       </p>
-      <a href="https://www.webscorer.com/register?pid=1&raceid=432522" target="_blank" class="btn-primary" style="font-size:1.05rem; padding:1rem 3rem;">
-        Join the waitlist →
-      </a>
     </div>
   </div>
 </section>
